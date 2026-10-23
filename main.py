@@ -4,6 +4,22 @@ import datetime
 import json
 import os
 import base64
+import urllib.parse
+
+def load_local_img(fname):
+    paths = [fname, os.path.join('knowledge', fname), os.path.join('/workspace/knowledge', fname)]
+    for p in paths:
+        if os.path.exists(p):
+            try:
+                import base64
+                with open(p, 'rb') as f:
+                    return f'data:image/jpeg;base64,{base64.b64encode(f.read()).decode("utf-8")}'
+            except Exception: pass
+    return None
+
+MELO1_DEFAULT = load_local_img('melo1.jpeg')
+MELO2_DEFAULT = load_local_img('melo2.jpeg')
+
 
 st.set_page_config(page_title="Melo's Beauty", page_icon='🌸', layout='wide')
 
@@ -40,7 +56,7 @@ def get_default_data():
             'slogan': 'La magia que resalta tu brillo diario ✨',
             'location': 'Tienda virtual de maquillaje y accesorios en Buenaventura 🎀',
             'phone': '+57 312 569 1563',
-            'hero_img_b64': None
+            'hero_img_b64': MELO1_DEFAULT, 'bg_img_b64': MELO2_DEFAULT
         },
         'categories': {
             "Kits Melo's beauty": {'desc': 'Combinaciones especiales para armar tu kit de belleza diario.', 'img_b64': None},
@@ -53,17 +69,17 @@ def get_default_data():
             'Perfumes': {'desc': 'Fragancias exclusivas con aromas perdurables.', 'img_b64': None}
         },
         'products': [
-            {'id': 101, 'name': 'Termo térmico 1 litro', 'category': 'Termos', 'price': 88700, 'stock': 12, 'desc': 'Termo térmico de 1 Litro en tonos rosados suaves.', 'img_b64': None},
-            {'id': 102, 'name': 'Kit Candy Bum Purpure', 'category': "Kits Melo's beauty", 'price': 47400, 'stock': 8, 'desc': 'Kit especial con brillo labial, bálsamo y accesorios.', 'img_b64': None},
-            {'id': 103, 'name': "Kit Melo's beauty 3", 'category': "Kits Melo's beauty", 'price': 67000, 'stock': 5, 'desc': 'Trío de cosméticos esenciales para el día a día.', 'img_b64': None},
-            {'id': 104, 'name': "Kit Melo's beauty 2", 'category': "Kits Melo's beauty", 'price': 80700, 'stock': 3, 'desc': 'Kit intermedio con sombra de ojos e iluminador.', 'img_b64': None},
-            {'id': 105, 'name': "Kit Melo's beauty 1", 'category': "Kits Melo's beauty", 'price': 94000, 'stock': 10, 'desc': 'El kit más completo con cosmetiquera de regalo.', 'img_b64': None},
+            {'id': 101, 'sku': 'TERMO-1L-001', 'name': 'Termo térmico 1 litro', 'category': 'Termos', 'price': 88700, 'stock': 12, 'desc': 'Termo térmico de 1 Litro en tonos rosados suaves.', 'img_b64': None},
+            {'id': 102, 'sku': 'KIT-CANDY-PURPURE', 'name': 'Kit Candy Bum Purpure', 'category': "Kits Melo's beauty", 'price': 47400, 'stock': 8, 'desc': 'Kit especial con brillo labial, bálsamo y accesorios.', 'img_b64': None},
+            {'id': 103, 'sku': 'KIT-MELOSBEAUTY-003', 'name': "Kit Melo's beauty 3", 'category': "Kits Melo's beauty", 'price': 67000, 'stock': 5, 'desc': 'Trío de cosméticos esenciales para el día a día.', 'img_b64': None},
+            {'id': 104, 'sku': 'KIT-MELOSBEAUTY-002', 'name': "Kit Melo's beauty 2", 'category': "Kits Melo's beauty", 'price': 80700, 'stock': 3, 'desc': 'Kit intermedio con sombra de ojos e iluminador.', 'img_b64': None},
+            {'id': 105, 'sku': 'KIT-MELOSBEAUTY-001', 'name': "Kit Melo's beauty 1", 'category': "Kits Melo's beauty", 'price': 94000, 'stock': 10, 'desc': 'El kit más completo con cosmetiquera de regalo.', 'img_b64': None},
             {'id': 106, 'name': 'Billetera Bimba y Lola 1.1', 'category': 'Billeteras mujeres', 'price': 65900, 'stock': 6, 'desc': 'Billetera estilo 1.1 en tono rosa pastel.', 'img_b64': None},
             {'id': 107, 'name': 'Billetera Lacoste hombre 1.1', 'category': 'Billeteras hombres', 'price': 73700, 'stock': 4, 'desc': 'Billetera masculina elegante en cuerina premium.', 'img_b64': None}
         ],
         'reviews': [
-            {'client': 'Camila R.', 'rating': '⭐⭐⭐⭐⭐', 'comment': "Me encantó el Kit Melo's Beauty 1. Excelente servicio en Buenaventura.", 'date': '2026-10-15'},
-            {'client': 'Valeria M.', 'rating': '⭐⭐⭐⭐⭐', 'comment': 'El termo térmico de 1L mantiene el agua fría todo el día.', 'date': '2026-10-18'}
+            {'id': 1, 'client': 'Camila R.', 'rating': '⭐⭐⭐⭐⭐', 'comment': "Me encantó el Kit Melo's Beauty 1. Excelente servicio en Buenaventura.", 'date': '2026-10-15'},
+            {'id': 2, 'client': 'Valeria M.', 'rating': '⭐⭐⭐⭐⭐', 'comment': 'El termo térmico de 1L mantiene el agua fría todo el día.', 'date': '2026-10-18'}
         ]
     }
 
@@ -88,7 +104,7 @@ if 'admin_auth' not in st.session_state: st.session_state.admin_auth = False
 app_data = st.session_state.app_data
 
 st.sidebar.title("Melo's Beauty 🌸")
-mode = st.sidebar.radio('Navegación:', ['🛍️ Catálogo Clientes', '🔐 Acceso Dueño / Admin'])
+mode = st.sidebar.radio('Navegación:', ['🛍️ Catálogo Clientes', '🛒 Mi Pedido / Factura (Melo 3)', '🔐 Acceso Dueño / Admin'])
 st.sidebar.markdown('---')
 st.sidebar.subheader('Redes Sociales & Contacto')
 phone_clean = app_data['cover_info']['phone'].replace('+', '').replace(' ', '')
@@ -127,7 +143,7 @@ if mode == '🛍️ Catálogo Clientes':
                 elif p['stock'] > 0: st.markdown(f'<span class="stock-badge-red">⚠️ ¡Pocas Unidades! ({p["stock"]})</span>', unsafe_allow_html=True)
                 else: st.error('❌ Agotado temporalmente')
                 wa_text = f"Hola Melo's Beauty! Quiero comprar {p['name']} por COP ${p['price']:,}".replace(' ', '%20')
-                wa_link = f"https://" + f"wa.me/{phone_clean}?text={wa_text}"
+                wa_link = f"https://wa.me/{phone_clean}?text={wa_text}"
                 st.markdown(f'<a href="{wa_link}" target="_blank" class="btn-whatsapp">📲 Pedir por WhatsApp</a>', unsafe_allow_html=True)
                 st.markdown('<br>', unsafe_allow_html=True)
     st.markdown('---')
@@ -166,7 +182,7 @@ else:
         col_t, col_logout = st.columns([3, 1])
         with col_logout:
             if st.button('🔒 Cerrar Sesión Admin'): st.session_state.admin_auth = False; st.rerun()
-        t1, t2, t3, t4, t5 = st.tabs(['📊 Stock & Inventario', '📸 Subir Producto con Foto', '🗂️ Categorías & Fotos', '🖼️ Foto Portada', '🔑 Configurar PIN'])
+        t1, t2, t3, t4, t5, t6 = st.tabs(['📊 Stock & Inventario', '📸 Subir Producto con Foto', '💬 Administrar Reseñas', '🗂️ Categorías & Fotos', '🖼️ Foto Portada (Melo 1 & 2)', '🔑 Configurar PIN'])
         with t1:
             df_prods = pd.DataFrame(app_data['products'])
             tot = (df_prods['price'] * df_prods['stock']).sum()
