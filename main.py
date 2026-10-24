@@ -224,7 +224,7 @@ if 'cart' not in st.session_state: st.session_state.cart = {}
 app_data = st.session_state.app_data
 
 st.sidebar.title("Melo's Beauty 🌸")
-mode = st.sidebar.radio('Navegación:', ['🛍️ Catálogo Clientes', '🛒 Mi Pedido / Factura (Melo 3)', '🔐 Acceso Dueño / Admin'])
+mode = st.sidebar.radio('Navegación:', ['🛍️ Catálogo Clientes', '🛒 Mi Pedido / Factura', '🔐 Acceso Dueño / Admin'])
 st.sidebar.markdown('---')
 st.sidebar.subheader('Redes Sociales & Contacto')
 
