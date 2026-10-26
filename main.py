@@ -91,7 +91,7 @@ footer {{visibility: hidden;}}
 }}
 .product-img-container {{
     width: 100%;
-    height: 150px;
+    height: 180px;
     border-radius: 14px;
     background-color: #FFF0F3;
     display: flex;
@@ -100,6 +100,7 @@ footer {{visibility: hidden;}}
     overflow: hidden;
     border: 1px solid #F8B8CC;
     position: relative;
+    box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
 }}
 .product-img {{
     width: 100%;
@@ -109,6 +110,31 @@ footer {{visibility: hidden;}}
 }}
 .product-img:hover {{
     transform: scale(1.03);
+}}
+
+/* Puntos Indicadores del Carrusel (Estilo elegante de la captura) */
+.carousel-dots-container {{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+    margin-bottom: 6px;
+}}
+
+.carousel-dot {{
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: #D1D5DB;
+    transition: all 0.3s ease;
+    display: inline-block;
+}}
+
+.carousel-dot.active {{
+    background-color: #F06292;
+    width: 16px;
+    border-radius: 8px;
 }}
 
 /* Badges de inventario */
@@ -202,32 +228,81 @@ footer {{visibility: hidden;}}
     font-weight: 600 !important;
 }}
 
+/* =========================================================
+   ESTILOS OPTIMIZADOS PARA CELULAR Y CARRUSEL MOVIL
+   ========================================================= */
+
 /* Botones laterales compactos ◀ y ▶ para rotación de fotos */
-div[data-testid="stColumn"] button:has(div:contains("◀")),
-div[data-testid="stColumn"] button:has(div:contains("▶")) {{
+div[data-testid="column"] button:has(div:contains("◀")),
+div[data-testid="column"] button:has(div:contains("▶")) {{
     background-color: #F06292 !important;
     color: #FFFFFF !important;
     border-radius: 50% !important;
-    width: 30px !important;
-    height: 30px !important;
-    min-width: 30px !important;
+    width: 32px !important;
+    height: 32px !important;
+    min-width: 32px !important;
     padding: 0 !important;
     font-size: 0.85rem !important;
     font-weight: bold !important;
     border: none !important;
-    box-shadow: 0px 2px 6px rgba(240, 98, 146, 0.35) !important;
+    box-shadow: 0px 2px 6px rgba(240, 98, 146, 0.4) !important;
     margin: 0 auto !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
 }}
 
-div[data-testid="stColumn"] button:has(div:contains("◀")):hover,
-div[data-testid="stColumn"] button:has(div:contains("▶")):hover {{
+div[data-testid="column"] button:has(div:contains("◀")):hover,
+div[data-testid="column"] button:has(div:contains("▶")):hover {{
     background-color: #C2185B !important;
     transform: scale(1.1) !important;
 }}
 
+/* Forzar que las columnas del carrusel se mantengan alineadas en horizontal en pantallas de teléfono */
+@media (max-width: 768px) {{
+    div[data-testid="stHorizontalBlock"]:has(button:has(div:contains("◀"))) {{
+        display: flex !important;
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        width: 100% !important;
+    }}
+
+    div[data-testid="stHorizontalBlock"]:has(button:has(div:contains("◀"))) > div[data-testid="column"] {{
+        width: auto !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+    }}
+
+    div[data-testid="stHorizontalBlock"]:has(button:has(div:contains("◀"))) > div[data-testid="column"]:nth-child(1),
+    div[data-testid="stHorizontalBlock"]:has(button:has(div:contains("◀"))) > div[data-testid="column"]:nth-child(3) {{
+        width: 36px !important;
+        max-width: 36px !important;
+        flex: 0 0 36px !important;
+    }}
+
+    .product-img-container {{
+        height: 160px !important;
+    }}
+
+    .hero-banner {{
+        padding: 1.2rem !important;
+        border-radius: 16px !important;
+    }}
+
+    .hero-title {{
+        font-size: 1.8rem !important;
+    }}
+
+    .hero-subtitle {{
+        font-size: 1rem !important;
+    }}
+
+    .product-card {{
+        padding: 0.8rem !important;
+    }}
+}}
 </style>
 """
 st.markdown(STYLING_CSS, unsafe_allow_html=True)
@@ -430,19 +505,26 @@ if mode == "🛍️ Catálogo Clientes":
                 st.session_state[state_key] = 0
 
             with cols[idx % 3]:
-                # Si el producto tiene más de 1 foto, mostrar botones laterales ◀ y ▶
+                # Si el producto tiene más de 1 foto, mostrar botones laterales ◀ y ▶ y puntos indicadores
                 if len(p_imgs) > 1:
-                    c_prev, c_img, c_next = st.columns([1, 5, 1])
+                    c_prev, c_img, c_next = st.columns([1, 6, 1])
                     with c_prev:
-                        st.markdown("<div style='height:42px;'></div>", unsafe_allow_html=True)
+                        st.markdown("<div style='height:50px;'></div>", unsafe_allow_html=True)
                         if st.button("◀", key=f"rot_prev_{p_id}_{idx}"):
                             st.session_state[state_key] = (curr_idx - 1) % len(p_imgs)
                             st.rerun()
                     with c_img:
                         active_img = p_imgs[curr_idx]
                         st.markdown(f'<div class="product-img-container"><img src="{active_img}" class="product-img"></div>', unsafe_allow_html=True)
+                        
+                        # Puntos indicadores integrados (Estilo captura de pantalla)
+                        dots_html = "".join([
+                            f'<span class="carousel-dot {"active" if i == curr_idx else ""}"></span>'
+                            for i in range(len(p_imgs))
+                        ])
+                        st.markdown(f'<div class="carousel-dots-container">{dots_html}</div>', unsafe_allow_html=True)
                     with c_next:
-                        st.markdown("<div style='height:42px;'></div>", unsafe_allow_html=True)
+                        st.markdown("<div style='height:50px;'></div>", unsafe_allow_html=True)
                         if st.button("▶", key=f"rot_next_{p_id}_{idx}"):
                             st.session_state[state_key] = (curr_idx + 1) % len(p_imgs)
                             st.rerun()
