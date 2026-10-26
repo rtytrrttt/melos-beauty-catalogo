@@ -93,26 +93,16 @@ CSS = """
         box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
     }
 
-    /* Texto blanco DENTRO de las casillas/cuadro negro de notas e inputs */
-    input, textarea, select, 
-    div[data-baseweb="input"] input, 
-    div[data-baseweb="base-input"] input, 
-    div[data-baseweb="textarea"] textarea, 
-    div[data-baseweb="select"] div,
-    .stTextInput input, .stTextArea textarea {
+    /* Fix para visibilidad de texto en campos de entrada de formulario */
+    /* Estilos para campos de entrada del formulario */
+    input, textarea, select, div[data-baseweb="input"] input, div[data-baseweb="base-input"] input, div[data-baseweb="textarea"] textarea, div[data-baseweb="select"] div {
         color: #FFFFFF !important;
+        background-color: #1E1F29 !important;
         -webkit-text-fill-color: #FFFFFF !important;
-        background-color: #1A1A24 !important;
     }
-    
-    /* Texto negro POR FUERA de las casillas (etiquetas, nombres, titulos) */
-    label, .stTextInput label, .stTextArea label, .stSelectbox label, .stNumberInput label,
-    .stMarkdown, p, h1, h2, h3, h4, span, div.stCaption {
+    label, .stTextInput label, .stTextArea label, .stSelectbox label, .stNumberInput label {
         color: #000000 !important;
-        font-weight: 600;
-    }
-    .hero-title, .hero-subtitle, .hero-tag, .btn-whatsapp {
-        color: #FFFFFF !important;
+        font-weight: 700 !important;
     }
 </style>
 """
@@ -193,17 +183,31 @@ def get_item_sku(item):
             return f"SKU-{clean_n[:12]}"
     return "SKU-MELO001"
 
-def build_whatsapp_invoice_text(client_name, client_phone, items_list):
-    c_name = str(client_name).strip() if client_name and str(client_name).strip() else "Cliente"
-    c_phone = str(client_phone).strip() if client_phone and str(client_phone).strip() else "No especificado"
+def build_whatsapp_invoice_text(client_name, client_phone, items_list, client_cedula="", client_address="", client_city="", client_payment="", client_notes=""):
+    c_name = str(client_name).strip() if client_name and str(client_name).strip() else "Nas Murillo"
+    c_phone = str(client_phone).strip() if client_phone and str(client_phone).strip() else "+573028081327"
+    cedula = str(client_cedula).strip()
+    address = str(client_address).strip()
+    city = str(client_city).strip()
+    payment = str(client_payment).strip()
+    notes = str(client_notes).strip()
     
     lines = []
     lines.append(f"Hola, soy {c_name},")
     lines.append("")
     lines.append("Link a mi pedido: https://melos-beauty-catalogo-uwyau8ttti9kfmhywlvtlc.streamlit.app")
     lines.append("")
-    lines.append(f"Nombre: {c_name}")
-    lines.append(f"Celular: {c_phone}")
+    lines.append("DATOS PARA LA FACTURA:")
+    lines.append(f"• Nombre: {c_name}")
+    if cedula:
+        lines.append(f"• Cédula/NIT: {cedula}")
+    lines.append(f"• Celular: {c_phone}")
+    if address:
+        lines.append(f"• Dirección: {address}")
+    if city:
+        lines.append(f"• Ciudad: {city}")
+    if payment:
+        lines.append(f"• Método de Pago: {payment}")
     lines.append("")
     lines.append("==============================")
     lines.append("")
@@ -236,10 +240,14 @@ def build_whatsapp_invoice_text(client_name, client_phone, items_list):
     subtotal_str = f"{subtotal:,.0f}".replace(",", ".")
     lines.append(f"Subtotal: COP {subtotal_str}")
     lines.append(f"TOTAL: COP {subtotal_str}")
+    if notes:
+        lines.append("")
+        lines.append(f"Notas: {notes}")
     
-    raw_text = "\n".join(lines)
+    raw_text = chr(10).join(lines)
     encoded_text = urllib.parse.quote(raw_text)
     return raw_text, encoded_text
+
 
 if 'app_data' not in st.session_state: st.session_state.app_data = load_data()
 if 'admin_auth' not in st.session_state: st.session_state.admin_auth = False
@@ -354,14 +362,21 @@ elif mode == '🛒 Mi Pedido / Factura (Melo 3)':
     st.title('🛒 Armar Pedido / Factura Melo\'s Beauty')
     st.caption('Selecciona tus productos para generar la factura automática e ir directo a WhatsApp')
     
+    st.subheader('1. Datos Personales para la Factura')
     col_u1, col_u2 = st.columns(2)
     with col_u1:
-        c_name_in = st.text_input('Tu Nombre completo:', value='Nas Murillo')
+        c_name_in = st.text_input('Tu Nombre completo:', value='Nas Murillo', key='fact_name')
+        c_cedula_in = st.text_input('Cédula / NIT:', value='1085214789', key='fact_cedula')
+        c_phone_in = st.text_input('Tu Celular WhatsApp:', value='+573028081327', key='fact_phone')
     with col_u2:
-        c_phone_in = st.text_input('Tu Celular WhatsApp:', value='+573028081327')
+        c_address_in = st.text_input('Dirección de Entrega:', value='Calle 5 # 12-34, Pueblo Nuevo', key='fact_address')
+        c_city_in = st.text_input('Ciudad / Municipio:', value='Buenaventura, Valle', key='fact_city')
+        c_payment_in = st.selectbox('Método de Pago:', ['Bancolombia', 'Nequi', 'Bre-B', 'Efectivo contraentrega'], key='fact_payment')
         
+    c_notes_in = st.text_area('Notas Adicionales / Indicaciones de Entrega:', value='Entregar en la tarde.', key='fact_notes')
+    
     st.markdown('---')
-    st.subheader('🛍️ Selecciona los productos de tu pedido:')
+    st.subheader('2. Selecciona los productos de tu pedido:')
     
     selected_items = []
     prods_all = app_data.get('products', [])
@@ -387,12 +402,17 @@ elif mode == '🛒 Mi Pedido / Factura (Melo 3)':
                 })
                 
     st.markdown('---')
-    st.subheader('📄 Vista Previa de la Factura (Modelo Melo 3):')
+    st.subheader('3. Vista Previa de la Factura (Modelo Melo 3):')
     
     if not selected_items:
         st.warning('Selecciona al menos 1 producto arriba para generar la factura.')
     else:
-        raw_inv, enc_inv = build_whatsapp_invoice_text(c_name_in, c_phone_in, selected_items)
+        raw_inv, enc_inv = build_whatsapp_invoice_text(
+            c_name_in, c_phone_in, selected_items,
+            client_cedula=c_cedula_in, client_address=c_address_in,
+            client_city=c_city_in, client_payment=c_payment_in,
+            client_notes=c_notes_in
+        )
         st.markdown(f'<div class="invoice-box">{raw_inv}</div>', unsafe_allow_html=True)
         st.markdown('<br>', unsafe_allow_html=True)
         
