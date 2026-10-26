@@ -105,8 +105,11 @@ footer {{visibility: hidden;}}
 .product-img {{
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 6px;
+    background-color: #FFFFFF;
     transition: transform 0.4s ease, opacity 0.3s ease;
+    box-sizing: border-box;
 }}
 .product-img:hover {{
     transform: scale(1.03);
@@ -283,7 +286,11 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
     }}
 
     .product-img-container {{
-        height: 160px !important;
+        height: 180px !important;
+    }}
+    .product-img-slide {{
+        max-height: 180px !important;
+        padding: 4px !important;
     }}
 
     .hero-banner {{
@@ -309,26 +316,35 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
    ========================================================= */
 .product-img-container {{
     width: 100%;
-    height: 190px;
-    border-radius: 14px;
-    background-color: #FFF0F3;
+    height: 220px;
+    border-radius: 16px;
+    background-color: #FFFFFF;
     overflow: hidden;
-    border: 1px solid #F8B8CC;
+    border: 1.5px solid #F8B8CC;
     position: relative;
-    box-shadow: 0px 4px 10px rgba(248, 184, 204, 0.25);
+    box-shadow: 0px 4px 12px rgba(248, 184, 204, 0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }}
 
 .auto-slider-track {{
     display: flex;
     height: 100%;
+    width: 100%;
     margin: 0;
     padding: 0;
+    align-items: center;
 }}
 
 .product-img-slide {{
     height: 100%;
-    object-fit: cover;
+    max-height: 220px;
+    object-fit: contain;
+    padding: 6px;
+    background-color: #FFFFFF;
     flex-shrink: 0;
+    box-sizing: border-box;
 }}
 
 .auto-slider-1 {{
