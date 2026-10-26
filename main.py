@@ -23,154 +23,156 @@ st.set_page_config(
 )
 
 # Estilos CSS con imagen de fondo melo2.jpeg y paleta oficial
-STYLING_CSS = f"""
+RAW_CSS = """
 <style>
-    /* Fondo general con marca de agua melo2.jpeg */
-    .stApp {
-        background: linear-gradient(rgba(255, 245, 247, 0.92), rgba(255, 245, 247, 0.92)), url("{MELO2_DEFAULT}") repeat center center fixed;
-        background-size: cover;
-        color: #2C2C2C;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }
-    
-    #MainMenu {visibility: hidden;}
-    footer {visibility: hidden;}
-    
-    /* Header Banner Hero */
-    .hero-banner {
-        background: linear-gradient(135deg, #F8B8CC 0%, #F06292 100%);
-        padding: 2.2rem;
-        border-radius: 24px;
-        text-align: center;
-        color: white;
-        border: 2px solid #F06292;
-        margin-bottom: 2rem;
-        box-shadow: 0px 8px 20px rgba(240, 98, 146, 0.25);
-    }
-    .hero-title {
-        color: #FFFFFF;
-        font-size: 2.6rem;
-        font-weight: 800;
-        margin-bottom: 0.3rem;
-    }
-    .hero-subtitle {
-        color: #FFF0F5;
-        font-size: 1.25rem;
-        font-style: italic;
-    }
-    .hero-tag {
-        background-color: rgba(255, 255, 255, 0.28);
-        display: inline-block;
-        padding: 6px 18px;
-        border-radius: 30px;
-        font-weight: 600;
-        margin-top: 10px;
-        color: #FFFFFF;
-    }
-    
-    /* Tarjetas de Producto Limpias */
-    .product-card {
-        background-color: #FFFFFF;
-        border: 2px solid #F8B8CC;
-        border-radius: 18px;
-        padding: 1.1rem;
-        margin-bottom: 1rem;
-        box-shadow: 0px 6px 16px rgba(248, 184, 204, 0.2);
-    }
-    .product-title {
-        color: #C2185B;
-        font-size: 1.2rem;
-        font-weight: 700;
-        margin-top: 6px;
-    }
-    .product-price {
-        color: #C2185B;
-        font-size: 1.35rem;
-        font-weight: 800;
-        margin-top: 4px;
-    }
-    .product-img-container {
-        width: 100%;
-        height: 180px;
-        border-radius: 14px;
-        background-color: #FFF0F3;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        border: 1px solid #F8B8CC;
-    }
-    .product-img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-    
-    /* Badges de inventario */
-    .stock-badge-green {
-        background-color: #E8F5E9;
-        color: #2E7D32;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        display: inline-block;
-    }
-    .stock-badge-red {
-        background-color: #FFEBEE;
-        color: #C62828;
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.82rem;
-        font-weight: 700;
-        display: inline-block;
-    }
-    
-    /* Botones y Estilos de Carrito */
-    .btn-whatsapp-direct {
-        background-color: #25D366;
-        color: white !important;
-        padding: 12px 20px;
-        border-radius: 30px;
-        text-decoration: none;
-        font-weight: bold;
-        display: block;
-        text-align: center;
-        font-size: 1.05rem;
-        box-shadow: 0px 4px 12px rgba(37, 211, 102, 0.35);
-        margin-top: 15px;
-    }
-    .btn-whatsapp-direct:hover {
-        background-color: #1EBE57;
-        color: white !important;
-    }
-    
-    /* Botones primarios en Streamlit */
-    .stButton>button {
-        background-color: #F06292;
-        color: white;
-        border-radius: 20px;
-        border: none;
-        font-weight: bold;
-        transition: all 0.3s ease;
-    }
-    .stButton>button:hover {
-        background-color: #C2185B;
-        color: white;
-    }
-    
-    /* Contenedor de Factura */
-    .factura-box {
-        background-color: #FFFFFF;
-        border: 2px dashed #F06292;
-        border-radius: 16px;
-        padding: 1.5rem;
-        font-family: 'Courier New', Courier, monospace;
-        color: #222;
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
-    }
+/* Fondo general con marca de agua melo2.jpeg */
+.stApp {
+background: linear-gradient(rgba(255, 245, 247, 0.92), rgba(255, 245, 247, 0.92)), url("MELO2_PLACEHOLDER") repeat center center fixed;
+background-size: cover;
+color: #2C2C2C;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+#MainMenu {visibility: hidden;}
+footer {visibility: hidden;}
+
+/* Header Banner Hero */
+.hero-banner {
+    background: linear-gradient(135deg, #F8B8CC 0%, #F06292 100%);
+    padding: 2.2rem;
+    border-radius: 24px;
+    text-align: center;
+    color: white;
+    border: 2px solid #F06292;
+    margin-bottom: 2rem;
+    box-shadow: 0px 8px 20px rgba(240, 98, 146, 0.25);
+}
+.hero-title {
+    color: #FFFFFF;
+    font-size: 2.6rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
+}
+.hero-subtitle {
+    color: #FFF0F5;
+    font-size: 1.25rem;
+    font-style: italic;
+}
+.hero-tag {
+    background-color: rgba(255, 255, 255, 0.28);
+    display: inline-block;
+    padding: 6px 18px;
+    border-radius: 30px;
+    font-weight: 600;
+    margin-top: 10px;
+    color: #FFFFFF;
+}
+
+/* Tarjetas de Producto Limpias */
+.product-card {
+    background-color: #FFFFFF;
+    border: 2px solid #F8B8CC;
+    border-radius: 18px;
+    padding: 1.1rem;
+    margin-bottom: 1rem;
+    box-shadow: 0px 6px 16px rgba(248, 184, 204, 0.2);
+}
+.product-title {
+    color: #C2185B;
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-top: 6px;
+}
+.product-price {
+    color: #C2185B;
+    font-size: 1.35rem;
+    font-weight: 800;
+    margin-top: 4px;
+}
+.product-img-container {
+    width: 100%;
+    height: 180px;
+    border-radius: 14px;
+    background-color: #FFF0F3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #F8B8CC;
+}
+.product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Badges de inventario */
+.stock-badge-green {
+    background-color: #E8F5E9;
+    color: #2E7D32;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: inline-block;
+}
+.stock-badge-red {
+    background-color: #FFEBEE;
+    color: #C62828;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    display: inline-block;
+}
+
+/* Botones y Estilos de Carrito */
+.btn-whatsapp-direct {
+    background-color: #25D366;
+    color: white !important;
+    padding: 12px 20px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: bold;
+    display: block;
+    text-align: center;
+    font-size: 1.05rem;
+    box-shadow: 0px 4px 12px rgba(37, 211, 102, 0.35);
+    margin-top: 15px;
+}
+.btn-whatsapp-direct:hover {
+    background-color: #1EBE57;
+    color: white !important;
+}
+
+/* Botones primarios en Streamlit */
+.stButton>button {
+    background-color: #F06292;
+    color: white;
+    border-radius: 20px;
+    border: none;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.stButton>button:hover {
+    background-color: #C2185B;
+    color: white;
+}
+
+/* Contenedor de Factura */
+.factura-box {
+    background-color: #FFFFFF;
+    border: 2px dashed #F06292;
+    border-radius: 16px;
+    padding: 1.5rem;
+    font-family: 'Courier New', Courier, monospace;
+    color: #222;
+    box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
+}
 </style>
 """
+
+STYLING_CSS = RAW_CSS.replace("MELO2_PLACEHOLDER", MELO2_DEFAULT)
 st.markdown(STYLING_CSS, unsafe_allow_html=True)
 
 # ---------------------------------------------------------
