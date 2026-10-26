@@ -552,9 +552,9 @@ elif "Mi Carrito" in mode:
         lines = []
         lines.append(f"Hola, soy {client_name},")
         lines.append("")
-        s_domain = app_data["cover_info"].get("shop_url", "https://melosbeauty.ecometri.shop").rstrip("/")
-        o_code = "473574bc-5d18-46d2-b57a-6a01ab55fae7/1e968892-fbfb-46f1-9ef9-9ae21402caf0"
-        lines.append(f"Link a mi pedido: {s_domain}/order-review/{o_code}")
+        s_domain = app_data["cover_info"].get("shop_url", "https://melos-beauty-catalogo-uwyau8ttti9kfmhywlvtlc.streamlit.app/").rstrip("/")
+        o_code = ""
+        lines.append(f"Link a mi pedido: {s_domain}{o_code}")
         lines.append("")
         lines.append("DATOS PARA LA FACTURA:")
         lines.append(f"• Nombre: {client_name}")
