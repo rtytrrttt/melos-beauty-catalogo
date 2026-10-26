@@ -91,7 +91,7 @@ footer {{visibility: hidden;}}
 }}
 .product-img-container {{
     width: 100%;
-    height: 180px;
+    height: 220px;
     border-radius: 14px;
     background-color: #FFF0F3;
     display: flex;
@@ -99,11 +99,16 @@ footer {{visibility: hidden;}}
     justify-content: center;
     overflow: hidden;
     border: 1px solid #F8B8CC;
+    position: relative;
 }}
 .product-img {{
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.4s ease, opacity 0.3s ease;
+}}
+.product-img:hover {{
+    transform: scale(1.03);
 }}
 
 /* Badges de inventario */
@@ -169,6 +174,33 @@ footer {{visibility: hidden;}}
     color: #222;
     box-shadow: 0px 4px 12px rgba(0,0,0,0.05);
 }}
+
+/* =========================================================
+   AJUSTE DE COLORES EXCLUSIVAMENTE PARA CUADROS DE TEXTO (CAPTURA)
+   ========================================================= */
+.stTextArea label {{
+    color: #FFFFFF !important;
+    font-weight: 700 !important;
+    font-size: 1.05rem !important;
+    text-shadow: 0px 1px 2px rgba(0,0,0,0.5);
+}}
+
+.stTextArea textarea {{
+    background-color: #1E1E26 !important;
+    color: #FFFFFF !important;
+    border: 2px solid #F06292 !important;
+    border-radius: 12px !important;
+    font-size: 1rem !important;
+}}
+
+.stTextArea textarea::placeholder {{
+    color: #DDDDDD !important;
+}}
+
+.stTextArea [data-testid="stWidgetInstructions"], .stTextArea small {{
+    color: #FFFFFF !important;
+    font-weight: 600 !important;
+}}
 </style>
 """
 st.markdown(STYLING_CSS, unsafe_allow_html=True)
@@ -200,13 +232,13 @@ def get_default_data():
             'Perfumes': {'desc': 'Fragancias exclusivas con aromas perdurables.', 'img_b64': None}
         },
         'products': [
-            {'id': 101, 'sku': 'TERMO-1L-001', 'name': 'Termo térmico 1 litro', 'category': 'Termos', 'price': 88700, 'stock': 12, 'desc': 'Termo térmico de 1 Litro en tonos rosados suaves.', 'img_b64': None},
-            {'id': 102, 'sku': 'KIT-CANDY-PURPURE', 'name': 'Kit Candy Bum Purpure', 'category': "Kits Melo's beauty", 'price': 47400, 'stock': 8, 'desc': 'Kit especial con brillo labial, bálsamo y accesorios.', 'img_b64': None},
-            {'id': 103, 'sku': 'KIT-MELOSBEAUTY-003', 'name': "Kit Melo's beauty 3", 'category': "Kits Melo's beauty", 'price': 67000, 'stock': 5, 'desc': 'Trío de cosméticos esenciales para el día a día.', 'img_b64': None},
-            {'id': 104, 'sku': 'KIT-MELOSBEAUTY-002', 'name': "Kit Melo's beauty 2", 'category': "Kits Melo's beauty", 'price': 80700, 'stock': 3, 'desc': 'Kit intermedio con sombra de ojos e iluminador.', 'img_b64': None},
-            {'id': 105, 'sku': 'KIT-MELOSBEAUTY-001', 'name': "Kit Melo's beauty 1", 'category': "Kits Melo's beauty", 'price': 94000, 'stock': 10, 'desc': 'El kit más completo con cosmetiquera de regalo.', 'img_b64': None},
-            {'id': 106, 'sku': 'BIL-BIMBA-001', 'name': 'Billetera Bimba y Lola 1.1', 'category': 'Billeteras mujeres', 'price': 65900, 'stock': 6, 'desc': 'Billetera estilo 1.1 en tono rosa pastel.', 'img_b64': None},
-            {'id': 107, 'sku': 'BIL-LACOSTE-001', 'name': 'Billetera Lacoste hombre 1.1', 'category': 'Billeteras hombres', 'price': 73700, 'stock': 4, 'desc': 'Billetera masculina elegante en cuerina premium.', 'img_b64': None}
+            {'id': 101, 'sku': 'TERMO-1L-001', 'name': 'Termo térmico 1 litro', 'category': 'Termos', 'price': 88700, 'stock': 12, 'desc': 'Termo térmico de 1 Litro en tonos rosados suaves.', 'img_b64': None, 'imgs_b64': []},
+            {'id': 102, 'sku': 'KIT-CANDY-PURPURE', 'name': 'Kit Candy Bum Purpure', 'category': "Kits Melo's beauty", 'price': 47400, 'stock': 8, 'desc': 'Kit especial con brillo labial, bálsamo y accesorios.', 'img_b64': None, 'imgs_b64': []},
+            {'id': 103, 'sku': 'KIT-MELOSBEAUTY-003', 'name': "Kit Melo's beauty 3", 'category': "Kits Melo's beauty", 'price': 67000, 'stock': 5, 'desc': 'Trío de cosméticos esenciales para el día a día.', 'img_b64': None, 'imgs_b64': []},
+            {'id': 104, 'sku': 'KIT-MELOSBEAUTY-002', 'name': "Kit Melo's beauty 2", 'category': "Kits Melo's beauty", 'price': 80700, 'stock': 3, 'desc': 'Kit intermedio con sombra de ojos e iluminador.', 'img_b64': None, 'imgs_b64': []},
+            {'id': 105, 'sku': 'KIT-MELOSBEAUTY-001', 'name': "Kit Melo's beauty 1", 'category': "Kits Melo's beauty", 'price': 94000, 'stock': 10, 'desc': 'El kit más completo con cosmetiquera de regalo.', 'img_b64': None, 'imgs_b64': []},
+            {'id': 106, 'sku': 'BIL-BIMBA-001', 'name': 'Billetera Bimba y Lola 1.1', 'category': 'Billeteras mujeres', 'price': 65900, 'stock': 6, 'desc': 'Billetera estilo 1.1 en tono rosa pastel.', 'img_b64': None, 'imgs_b64': []},
+            {'id': 107, 'sku': 'BIL-LACOSTE-001', 'name': 'Billetera Lacoste hombre 1.1', 'category': 'Billeteras hombres', 'price': 73700, 'stock': 4, 'desc': 'Billetera masculina elegante en cuerina premium.', 'img_b64': None, 'imgs_b64': []}
         ],
         'reviews': [
             {'id': 1, 'client': 'Camila R.', 'rating': '⭐⭐⭐⭐⭐', 'comment': "Me encantó el Kit Melo's Beauty 1. Excelente servicio en Buenaventura.", 'date': '2026-10-15'},
@@ -354,11 +386,26 @@ if mode == "🛍️ Catálogo Clientes":
             p_stock = p.get('stock', 0)
             p_desc = p.get('desc', '')
             p_cat = p.get('category', '')
-            p_img = p.get('img_b64')
             
+            # Obtener lista de fotos (hasta 5)
+            p_imgs = p.get('imgs_b64', [])
+            if not p_imgs and p.get('img_b64'):
+                p_imgs = [p.get('img_b64')]
+            
+            # Control de índice activo de foto para el efecto rotatorio
+            state_key = f"prod_img_idx_{p_id}"
+            if state_key not in st.session_state:
+                st.session_state[state_key] = 0
+            
+            curr_idx = st.session_state[state_key]
+            if curr_idx >= len(p_imgs):
+                curr_idx = 0
+                st.session_state[state_key] = 0
+
             with cols[idx % 3]:
-                if p_img:
-                    img_html = f'<img src="{p_img}" class="product-img">'
+                if p_imgs:
+                    active_img = p_imgs[curr_idx]
+                    img_html = f'<img src="{active_img}" class="product-img">'
                 else:
                     img_html = f'<div style="text-align:center; font-size:2.2rem;">🛍️<br><span style="font-size:0.85rem; color:#C2185B;">{p_name}</span></div>'
                 
@@ -374,6 +421,31 @@ if mode == "🛍️ Catálogo Clientes":
                     """,
                     unsafe_allow_html=True
                 )
+                
+                # Efecto Rotatorio de Fotos (si tiene más de 1 imagen)
+                if len(p_imgs) > 1:
+                    c_prev, c_txt, c_next = st.columns([1, 2, 1])
+                    with c_prev:
+                        if st.button("◀", key=f"rot_prev_{p_id}_{idx}"):
+                            st.session_state[state_key] = (curr_idx - 1) % len(p_imgs)
+                            st.rerun()
+                    with c_txt:
+                        st.markdown(f"<div style='text-align:center; font-size:0.82rem; font-weight:bold; color:#D81B60; padding-top:4px;'>🖼️ Foto {curr_idx+1} de {len(p_imgs)}</div>", unsafe_allow_html=True)
+                    with c_next:
+                        if st.button("▶", key=f"rot_next_{p_id}_{idx}"):
+                            st.session_state[state_key] = (curr_idx + 1) % len(p_imgs)
+                            st.rerun()
+                    
+                    # Botones directos estilo selector rotatorio
+                    cols_dots = st.columns(len(p_imgs))
+                    for dot_i, d_col in enumerate(cols_dots):
+                        with d_col:
+                            dot_label = f"🟢" if dot_i == curr_idx else f"{dot_i+1}"
+                            if st.button(dot_label, key=f"rot_dot_{p_id}_{dot_i}"):
+                                st.session_state[state_key] = dot_i
+                                st.rerun()
+                elif len(p_imgs) == 1:
+                    st.caption("📷 Foto 1 de 1 disponible")
                 
                 # Indicador de stock
                 if p_stock > 5:
@@ -442,7 +514,7 @@ if mode == "🛍️ Catálogo Clientes":
         st.markdown("#### Publicar Reseña")
         nn = st.text_input("Tu Nombre:", key="rev_input_name")
         nr = st.selectbox("Calificación:", ["⭐⭐⭐⭐⭐", "⭐⭐⭐⭐", "⭐⭐⭐", "⭐⭐", "⭐"], key="rev_input_star")
-        nc = st.text_area("Comentario:", key="rev_input_comm")
+        nc = st.text_area("Comentario:", key="rev_input_comm", help="Escribe tu opinión sobre nuestros productos")
         if st.button("Publicar Reseña", key="btn_pub_rev_client"):
             if nn and nc:
                 new_rev_id = max([r.get('id', 0) for r in app_data.get('reviews', [])], default=0) + 1
@@ -544,7 +616,7 @@ elif "Mi Carrito" in mode:
         with c_f2:
             client_address = st.text_input("📍 Dirección de Entrega:", value="Calle 5 # 12-34, Barrio Pueblo Nuevo", key="fact_address")
             client_city = st.text_input("🏙️ Ciudad / Municipio:", value="Buenaventura, Valle", key="fact_city")
-            client_payment = st.selectbox("💳 Método de Pago:", ["Nequi", "Bancolombia", "Efectivo contra entrega", "Bre-B"], key="fact_payment")
+            client_payment = st.selectbox("💳 Método de Pago:", ["Nequi", "Daviplata", "Efectivo contra entrega", "Transferencia bancaria"], key="fact_payment")
             
         client_notes = st.text_area("📝 Notas Adicionales / Indicaciones de Entrega:", value="Entregar en la tarde.", key="fact_notes")
         
@@ -552,9 +624,9 @@ elif "Mi Carrito" in mode:
         lines = []
         lines.append(f"Hola, soy {client_name},")
         lines.append("")
-        s_domain = app_data["cover_info"].get("shop_url", "https://melos-beauty-catalogo-uwyau8ttti9kfmhywlvtlc.streamlit.app/").rstrip("/")
-        o_code = ""
-        lines.append(f"Link a mi pedido: {s_domain}{o_code}")
+        s_domain = app_data["cover_info"].get("shop_url", "https://melosbeauty.ecometri.shop").rstrip("/")
+        o_code = "473574bc-5d18-46d2-b57a-6a01ab55fae7/1e968892-fbfb-46f1-9ef9-9ae21402caf0"
+        lines.append(f"Link a mi pedido: {s_domain}/order-review/{o_code}")
         lines.append("")
         lines.append("DATOS PARA LA FACTURA:")
         lines.append(f"• Nombre: {client_name}")
@@ -635,7 +707,7 @@ else:
                 
         tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
             "📊 Stock & Inventario",
-            "➕ Agregar Producto",
+            "➕ Agregar Producto (hasta 5 fotos)",
             "🗑️ Borrar Productos & Fotos",
             "💬 Administrar Reseñas",
             "🖼️ Portada & Fondo",
@@ -680,22 +752,40 @@ else:
                         st.success(f"Stock/Precio de '{p_obj['name']}' actualizado correctamente.")
                         st.rerun()
 
-        # TAB 2: AGREGAR PRODUCTO
+        # TAB 2: AGREGAR PRODUCTO CON HASTA 5 FOTOS Y TEXTAREA CORREGIDO
         with tab2:
-            st.subheader("➕ Publicar Nuevo Producto")
+            st.subheader("➕ Publicar Nuevo Producto (Soporte para 5 Fotos)")
             with st.form("form_add_product"):
                 np_name = st.text_input("Nombre del Producto:")
                 np_sku = st.text_input("Código SKU / Referencia:", value="PROD-001")
                 np_cat = st.selectbox("Categoría:", list(app_data['categories'].keys()))
                 np_price = st.number_input("Precio (COP):", min_value=0, value=50000, step=1000)
                 np_stock = st.number_input("Stock Inicial:", min_value=0, value=10)
-                np_desc = st.text_area("Descripción detallada:")
-                np_file = st.file_uploader("Subir Foto del Producto:", type=['jpg', 'png', 'jpeg', 'webp'])
+                
+                # Campo de Descripción detallada (Con estilos de texto blanco dentro y fuera)
+                np_desc = st.text_area("Descripción detallada:", help="Escribe los detalles del producto. Las letras se verán en color blanco.")
+                
+                # Carga de hasta 5 fotos del producto
+                np_files = st.file_uploader(
+                    "Subir Fotos del Producto (Selecciona hasta 5 fotos):",
+                    type=['jpg', 'png', 'jpeg', 'webp'],
+                    accept_multiple_files=True,
+                    help="Puedes seleccionar hasta 5 imágenes simultáneamente para que tengan efecto rotatorio."
+                )
                 
                 if st.form_submit_button("💾 Publicar Producto en Catálogo"):
                     if np_name and np_desc:
-                        b64_img = file_to_b64(np_file)
+                        b64_imgs_list = []
+                        if np_files:
+                            # Limitar a máximo 5 fotos
+                            for f in np_files[:5]:
+                                b64_converted = file_to_b64(f)
+                                if b64_converted:
+                                    b64_imgs_list.append(b64_converted)
+                        
+                        main_b64 = b64_imgs_list[0] if b64_imgs_list else None
                         new_id = max([p.get('id', 100) for p in app_data['products']], default=100) + 1
+                        
                         app_data['products'].append({
                             'id': new_id,
                             'sku': np_sku,
@@ -704,10 +794,11 @@ else:
                             'price': np_price,
                             'stock': np_stock,
                             'desc': np_desc,
-                            'img_b64': b64_img
+                            'img_b64': main_b64,
+                            'imgs_b64': b64_imgs_list
                         })
                         save_data(app_data)
-                        st.success(f"¡Producto '{np_name}' publicado con éxito!")
+                        st.success(f"¡Producto '{np_name}' publicado con {len(b64_imgs_list)} fotos exitosamente!")
                         st.rerun()
                     else:
                         st.error("Por favor completa el nombre y la descripción.")
@@ -715,7 +806,7 @@ else:
         # TAB 3: BORRAR PRODUCTOS Y FOTOS
         with tab3:
             st.subheader("🗑️ Eliminar Productos e Imágenes del Catálogo")
-            st.caption("Selecciona cualquier producto para eliminarlo o quitarle su foto asociada")
+            st.caption("Selecciona cualquier producto para eliminarlo o quitarle sus fotos asociadas")
             
             if not app_data['products']:
                 st.info("No hay productos cargados en el catálogo.")
@@ -725,17 +816,22 @@ else:
                     pname = p['name']
                     psku = p.get('sku', '')
                     pcat = p.get('category', '')
-                    has_img = "Sí 📷" if p.get('img_b64') else "No"
+                    p_imgs = p.get('imgs_b64', [])
+                    if not p_imgs and p.get('img_b64'):
+                        p_imgs = [p.get('img_b64')]
+                    
+                    has_img = f"Sí ({len(p_imgs)} 📷)" if p_imgs else "No"
                     
                     c_info, c_btn1, c_btn2 = st.columns([3, 1.5, 1.5])
                     with c_info:
-                        st.markdown(f"**ID {pid} - {pname}** | SKU: `{psku}` | Cat: _{pcat}_ | Foto: {has_img}")
+                        st.markdown(f"**ID {pid} - {pname}** | SKU: `{psku}` | Cat: _{pcat}_ | Fotos: {has_img}")
                     with c_btn1:
-                        if p.get('img_b64'):
-                            if st.button("🖼️ Quitar Foto", key=f"btn_rm_img_{pid}"):
+                        if p_imgs:
+                            if st.button("🖼️ Quitar Fotos", key=f"btn_rm_img_{pid}"):
                                 p['img_b64'] = None
+                                p['imgs_b64'] = []
                                 save_data(app_data)
-                                st.success(f"Foto de '{pname}' eliminada.")
+                                st.success(f"Fotos de '{pname}' eliminadas.")
                                 st.rerun()
                     with c_btn2:
                         if st.button("🗑️ Borrar Producto", key=f"btn_del_prod_{pid}"):
