@@ -312,20 +312,18 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
 }}
 
 /* =========================================================
-   CARROUSEL / SLIDER AUTOMÁTICO CSS SIN BOTONES
+   CARROUSEL / SLIDER AUTOMÁTICO CSS SIN BOTONES (PC Y MÓVIL)
    ========================================================= */
 .product-img-container {{
     width: 100%;
-    height: 220px;
-    border-radius: 16px;
-    background-color: #FFFFFF;
+    height: 240px;
+    border-radius: 14px;
+    background-color: #FFF0F3;
     overflow: hidden;
-    border: 1.5px solid #F8B8CC;
+    border: 1px solid #F8B8CC;
     position: relative;
-    box-shadow: 0px 4px 12px rgba(248, 184, 204, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    margin-bottom: 0.8rem;
+    display: block;
 }}
 
 .auto-slider-track {{
@@ -334,17 +332,23 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
     width: 100%;
     margin: 0;
     padding: 0;
-    align-items: center;
+    flex-shrink: 0;
 }}
 
 .product-img-slide {{
     height: 100%;
-    max-height: 220px;
-    object-fit: contain;
-    padding: 6px;
-    background-color: #FFFFFF;
+    width: 100%;
+    object-fit: cover;
     flex-shrink: 0;
-    box-sizing: border-box;
+    display: block;
+}}
+
+.product-img-single {{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    border-radius: 13px;
 }}
 
 .auto-slider-1 {{
@@ -356,7 +360,8 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
 
 .auto-slider-2 {{
     width: 200%;
-    animation: autoSlide2 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    flex-shrink: 0;
+    animation: autoSlide2 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }}
 .auto-slider-2 .product-img-slide {{
     width: 50%;
@@ -364,7 +369,8 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
 
 .auto-slider-3 {{
     width: 300%;
-    animation: autoSlide3 9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    flex-shrink: 0;
+    animation: autoSlide3 10.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }}
 .auto-slider-3 .product-img-slide {{
     width: 33.3333%;
@@ -372,7 +378,8 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
 
 .auto-slider-4 {{
     width: 400%;
-    animation: autoSlide4 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    flex-shrink: 0;
+    animation: autoSlide4 14s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }}
 .auto-slider-4 .product-img-slide {{
     width: 25%;
@@ -380,7 +387,8 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
 
 .auto-slider-5 {{
     width: 500%;
-    animation: autoSlide5 15s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    flex-shrink: 0;
+    animation: autoSlide5 17.5s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }}
 .auto-slider-5 .product-img-slide {{
     width: 20%;
@@ -408,14 +416,13 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
 }}
 
 @keyframes autoSlide5 {{
-    0%, 17% {{ transform: translateX(0%); }}
-    20%, 37% {{ transform: translateX(-20%); }}
-    40%, 57% {{ transform: translateX(-40%); }}
-    60%, 77% {{ transform: translateX(-60%); }}
-    80%, 97% {{ transform: translateX(-80%); }}
+    0%, 16% {{ transform: translateX(0%); }}
+    20%, 36% {{ transform: translateX(-20%); }}
+    40%, 56% {{ transform: translateX(-40%); }}
+    60%, 76% {{ transform: translateX(-60%); }}
+    80%, 96% {{ transform: translateX(-80%); }}
     100% {{ transform: translateX(0%); }}
 }}
-
 </style>
 """
 st.markdown(STYLING_CSS, unsafe_allow_html=True)
@@ -610,25 +617,24 @@ if mode == "🛍️ Catálogo Clientes":
             n_imgs = min(len(p_imgs), 5) if p_imgs else 0
             
             with cols[idx % 3]:
-                if n_imgs > 0:
+                if n_imgs > 1:
                     slides_html = "".join([f'<img src="{img}" class="product-img-slide">' for img in p_imgs[:n_imgs]])
-                    img_html = f'<div class="product-img-container"><div class="auto-slider-track auto-slider-{n_imgs}">{slides_html}</div></div>'
+                    img_inner = f'<div class="auto-slider-track auto-slider-{n_imgs}">{slides_html}</div>'
+                elif n_imgs == 1:
+                    img_inner = f'<img src="{p_imgs[0]}" class="product-img-single">'
                 else:
-                    img_html = f'<div class="product-img-container"><div style="text-align:center; font-size:2rem; padding-top:40px;">🛍️<br><span style="font-size:0.8rem; color:#C2185B;">{p_name}</span></div></div>'
+                    img_inner = f'<div style="text-align:center; font-size:2rem; padding-top:60px;">🛍️<br><span style="font-size:0.85rem; color:#C2185B;">{p_name}</span></div>'
                 
-                st.markdown(img_html, unsafe_allow_html=True)
-
-                st.markdown(
-                    f"""
-                    <div class="product-card" style="margin-top:-6px;">
-                        <div class="product-title">{p_name}</div>
-                        <div style="color:#666; font-size:0.85rem; margin-top:2px;">Categoría: <b>{p_cat}</b></div>
-                        <p style="color:#444; font-size:0.88rem; margin-top:6px; height:40px; overflow:hidden;">{p_desc}</p>
-                        <div class="product-price">COP {p_price:,.0f}</div>
-                    </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+                card_html = f'''
+                <div class="product-card">
+                    <div class="product-img-container">{img_inner}</div>
+                    <div class="product-title">{p_name}</div>
+                    <div style="color:#666; font-size:0.85rem; margin-top:2px;">Categoría: <b>{p_cat}</b></div>
+                    <p style="color:#444; font-size:0.88rem; margin-top:6px; height:40px; overflow:hidden;">{p_desc}</p>
+                    <div class="product-price">COP {p_price:,.0f}</div>
+                </div>
+                '''
+                st.markdown(card_html, unsafe_allow_html=True)
                 
                 # Indicador de stock
                 if p_stock > 5:
