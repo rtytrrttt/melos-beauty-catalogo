@@ -544,7 +544,7 @@ elif "Mi Carrito" in mode:
         with c_f2:
             client_address = st.text_input("📍 Dirección de Entrega:", value="Calle 5 # 12-34, Barrio Pueblo Nuevo", key="fact_address")
             client_city = st.text_input("🏙️ Ciudad / Municipio:", value="Buenaventura, Valle", key="fact_city")
-            client_payment = st.selectbox("💳 Método de Pago:", ["Nequi", "Daviplata", "Efectivo contra entrega", "Transferencia bancaria"], key="fact_payment")
+            client_payment = st.selectbox("💳 Método de Pago:", ["Nequi", "Bancolombia", "Efectivo contra entrega", "Bre-B"], key="fact_payment")
             
         client_notes = st.text_area("📝 Notas Adicionales / Indicaciones de Entrega:", value="Entregar en la tarde.", key="fact_notes")
         
