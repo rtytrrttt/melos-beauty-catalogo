@@ -529,21 +529,15 @@ mode = st.sidebar.radio(
     ]
 )
 st.sidebar.markdown("---")
-st.sidebar.subheader("Redes Sociales & Contacto")
 redes_img_b64 = app_data['cover_info'].get('redes_img_b64') or MELO4_DEFAULT
 st.sidebar.markdown(
     f"""
-    <div style="text-align:center; margin-bottom:1rem;">
+    <div style="text-align:center; margin-top:1rem; margin-bottom:1rem;">
         <img src="{redes_img_b64}" style="width:100%; border-radius:16px; border:2px solid #F06292; box-shadow: 0px 4px 12px rgba(240, 98, 146, 0.25);">
     </div>
     """,
     unsafe_allow_html=True
 )
-phone_clean = app_data['cover_info'].get('phone', '+57 312 569 1563').replace('+', '').replace(' ', '')
-st.sidebar.markdown(f"💬 **WhatsApp**: {app_data['cover_info'].get('phone', '+57 312 569 1563')}")
-st.sidebar.markdown("📸 **Instagram**: @melos_beauty4")
-st.sidebar.markdown("🎵 **TikTok**: @melos.beauty7")
-st.sidebar.markdown("📘 **Facebook**: Melo Beauty Buenaventura")
 
 # ---------------------------------------------------------
 # MODO 1: CATÁLOGO CLIENTES (VISTA LIMPIA Y RÁPIDA)
