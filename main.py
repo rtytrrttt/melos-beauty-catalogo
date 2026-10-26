@@ -303,6 +303,103 @@ div[data-testid="column"] button:has(div:contains("▶")):hover {{
         padding: 0.8rem !important;
     }}
 }}
+
+/* =========================================================
+   CARROUSEL / SLIDER AUTOMÁTICO CSS SIN BOTONES
+   ========================================================= */
+.product-img-container {{
+    width: 100%;
+    height: 190px;
+    border-radius: 14px;
+    background-color: #FFF0F3;
+    overflow: hidden;
+    border: 1px solid #F8B8CC;
+    position: relative;
+    box-shadow: 0px 4px 10px rgba(248, 184, 204, 0.25);
+}}
+
+.auto-slider-track {{
+    display: flex;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}}
+
+.product-img-slide {{
+    height: 100%;
+    object-fit: cover;
+    flex-shrink: 0;
+}}
+
+.auto-slider-1 {{
+    width: 100%;
+}}
+.auto-slider-1 .product-img-slide {{
+    width: 100%;
+}}
+
+.auto-slider-2 {{
+    width: 200%;
+    animation: autoSlide2 6s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}}
+.auto-slider-2 .product-img-slide {{
+    width: 50%;
+}}
+
+.auto-slider-3 {{
+    width: 300%;
+    animation: autoSlide3 9s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}}
+.auto-slider-3 .product-img-slide {{
+    width: 33.3333%;
+}}
+
+.auto-slider-4 {{
+    width: 400%;
+    animation: autoSlide4 12s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}}
+.auto-slider-4 .product-img-slide {{
+    width: 25%;
+}}
+
+.auto-slider-5 {{
+    width: 500%;
+    animation: autoSlide5 15s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+}}
+.auto-slider-5 .product-img-slide {{
+    width: 20%;
+}}
+
+@keyframes autoSlide2 {{
+    0%, 42% {{ transform: translateX(0%); }}
+    50%, 92% {{ transform: translateX(-50%); }}
+    100% {{ transform: translateX(0%); }}
+}}
+
+@keyframes autoSlide3 {{
+    0%, 28% {{ transform: translateX(0%); }}
+    33%, 61% {{ transform: translateX(-33.3333%); }}
+    66%, 94% {{ transform: translateX(-66.6666%); }}
+    100% {{ transform: translateX(0%); }}
+}}
+
+@keyframes autoSlide4 {{
+    0%, 21% {{ transform: translateX(0%); }}
+    25%, 46% {{ transform: translateX(-25%); }}
+    50%, 71% {{ transform: translateX(-50%); }}
+    75%, 96% {{ transform: translateX(-75%); }}
+    100% {{ transform: translateX(0%); }}
+}}
+
+@keyframes autoSlide5 {{
+    0%, 17% {{ transform: translateX(0%); }}
+    20%, 37% {{ transform: translateX(-20%); }}
+    40%, 57% {{ transform: translateX(-40%); }}
+    60%, 77% {{ transform: translateX(-60%); }}
+    80%, 97% {{ transform: translateX(-80%); }}
+    100% {{ transform: translateX(0%); }}
+}}
+
 </style>
 """
 st.markdown(STYLING_CSS, unsafe_allow_html=True)
@@ -494,44 +591,16 @@ if mode == "🛍️ Catálogo Clientes":
             if not p_imgs and p.get('img_b64'):
                 p_imgs = [p.get('img_b64')]
             
-            # Control de índice activo de foto para el efecto rotatorio
-            state_key = f"prod_img_idx_{p_id}"
-            if state_key not in st.session_state:
-                st.session_state[state_key] = 0
+            n_imgs = min(len(p_imgs), 5) if p_imgs else 0
             
-            curr_idx = st.session_state[state_key]
-            if curr_idx >= len(p_imgs):
-                curr_idx = 0
-                st.session_state[state_key] = 0
-
             with cols[idx % 3]:
-                # Si el producto tiene más de 1 foto, mostrar botones laterales ◀ y ▶ y puntos indicadores
-                if len(p_imgs) > 1:
-                    c_prev, c_img, c_next = st.columns([1, 6, 1])
-                    with c_prev:
-                        st.markdown("<div style='height:50px;'></div>", unsafe_allow_html=True)
-                        if st.button("◀", key=f"rot_prev_{p_id}_{idx}"):
-                            st.session_state[state_key] = (curr_idx - 1) % len(p_imgs)
-                            st.rerun()
-                    with c_img:
-                        active_img = p_imgs[curr_idx]
-                        st.markdown(f'<div class="product-img-container"><img src="{active_img}" class="product-img"></div>', unsafe_allow_html=True)
-                        
-                        # Puntos indicadores integrados (Estilo captura de pantalla)
-                        dots_html = "".join([
-                            f'<span class="carousel-dot {"active" if i == curr_idx else ""}"></span>'
-                            for i in range(len(p_imgs))
-                        ])
-                        st.markdown(f'<div class="carousel-dots-container">{dots_html}</div>', unsafe_allow_html=True)
-                    with c_next:
-                        st.markdown("<div style='height:50px;'></div>", unsafe_allow_html=True)
-                        if st.button("▶", key=f"rot_next_{p_id}_{idx}"):
-                            st.session_state[state_key] = (curr_idx + 1) % len(p_imgs)
-                            st.rerun()
-                elif len(p_imgs) == 1:
-                    st.markdown(f'<div class="product-img-container"><img src="{p_imgs[0]}" class="product-img"></div>', unsafe_allow_html=True)
+                if n_imgs > 0:
+                    slides_html = "".join([f'<img src="{img}" class="product-img-slide">' for img in p_imgs[:n_imgs]])
+                    img_html = f'<div class="product-img-container"><div class="auto-slider-track auto-slider-{n_imgs}">{slides_html}</div></div>'
                 else:
-                    st.markdown(f'<div class="product-img-container"><div style="text-align:center; font-size:2rem;">🛍️<br><span style="font-size:0.8rem; color:#C2185B;">{p_name}</span></div></div>', unsafe_allow_html=True)
+                    img_html = f'<div class="product-img-container"><div style="text-align:center; font-size:2rem; padding-top:40px;">🛍️<br><span style="font-size:0.8rem; color:#C2185B;">{p_name}</span></div></div>'
+                
+                st.markdown(img_html, unsafe_allow_html=True)
 
                 st.markdown(
                     f"""
