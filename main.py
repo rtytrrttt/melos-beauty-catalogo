@@ -204,7 +204,7 @@ footer {{visibility: hidden;}}
 
 /* Botones laterales compactos ◀ y ▶ para rotación de fotos */
 div[data-testid="stColumn"] button:has(div:contains("◀")),
-div[data-testid="stColumn"] button:has(div:contains("▶")) {
+div[data-testid="stColumn"] button:has(div:contains("▶")) {{
     background-color: #F06292 !important;
     color: #FFFFFF !important;
     border-radius: 50% !important;
@@ -220,13 +220,13 @@ div[data-testid="stColumn"] button:has(div:contains("▶")) {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
-}
+}}
 
 div[data-testid="stColumn"] button:has(div:contains("◀")):hover,
-div[data-testid="stColumn"] button:has(div:contains("▶")):hover {
+div[data-testid="stColumn"] button:has(div:contains("▶")):hover {{
     background-color: #C2185B !important;
     transform: scale(1.1) !important;
-}
+}}
 
 </style>
 """
