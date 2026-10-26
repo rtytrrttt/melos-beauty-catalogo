@@ -91,7 +91,7 @@ footer {{visibility: hidden;}}
 }}
 .product-img-container {{
     width: 100%;
-    height: 220px;
+    height: 150px;
     border-radius: 14px;
     background-color: #FFF0F3;
     display: flex;
@@ -201,6 +201,33 @@ footer {{visibility: hidden;}}
     color: #FFFFFF !important;
     font-weight: 600 !important;
 }}
+
+/* Botones laterales compactos ◀ y ▶ para rotación de fotos */
+div[data-testid="stColumn"] button:has(div:contains("◀")),
+div[data-testid="stColumn"] button:has(div:contains("▶")) {
+    background-color: #F06292 !important;
+    color: #FFFFFF !important;
+    border-radius: 50% !important;
+    width: 30px !important;
+    height: 30px !important;
+    min-width: 30px !important;
+    padding: 0 !important;
+    font-size: 0.85rem !important;
+    font-weight: bold !important;
+    border: none !important;
+    box-shadow: 0px 2px 6px rgba(240, 98, 146, 0.35) !important;
+    margin: 0 auto !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+}
+
+div[data-testid="stColumn"] button:has(div:contains("◀")):hover,
+div[data-testid="stColumn"] button:has(div:contains("▶")):hover {
+    background-color: #C2185B !important;
+    transform: scale(1.1) !important;
+}
+
 </style>
 """
 st.markdown(STYLING_CSS, unsafe_allow_html=True)
@@ -403,16 +430,30 @@ if mode == "🛍️ Catálogo Clientes":
                 st.session_state[state_key] = 0
 
             with cols[idx % 3]:
-                if p_imgs:
-                    active_img = p_imgs[curr_idx]
-                    img_html = f'<img src="{active_img}" class="product-img">'
+                # Si el producto tiene más de 1 foto, mostrar botones laterales ◀ y ▶
+                if len(p_imgs) > 1:
+                    c_prev, c_img, c_next = st.columns([1, 5, 1])
+                    with c_prev:
+                        st.markdown("<div style='height:42px;'></div>", unsafe_allow_html=True)
+                        if st.button("◀", key=f"rot_prev_{p_id}_{idx}"):
+                            st.session_state[state_key] = (curr_idx - 1) % len(p_imgs)
+                            st.rerun()
+                    with c_img:
+                        active_img = p_imgs[curr_idx]
+                        st.markdown(f'<div class="product-img-container"><img src="{active_img}" class="product-img"></div>', unsafe_allow_html=True)
+                    with c_next:
+                        st.markdown("<div style='height:42px;'></div>", unsafe_allow_html=True)
+                        if st.button("▶", key=f"rot_next_{p_id}_{idx}"):
+                            st.session_state[state_key] = (curr_idx + 1) % len(p_imgs)
+                            st.rerun()
+                elif len(p_imgs) == 1:
+                    st.markdown(f'<div class="product-img-container"><img src="{p_imgs[0]}" class="product-img"></div>', unsafe_allow_html=True)
                 else:
-                    img_html = f'<div style="text-align:center; font-size:2.2rem;">🛍️<br><span style="font-size:0.85rem; color:#C2185B;">{p_name}</span></div>'
-                
+                    st.markdown(f'<div class="product-img-container"><div style="text-align:center; font-size:2rem;">🛍️<br><span style="font-size:0.8rem; color:#C2185B;">{p_name}</span></div></div>', unsafe_allow_html=True)
+
                 st.markdown(
                     f"""
-                    <div class="product-card">
-                        <div class="product-img-container">{img_html}</div>
+                    <div class="product-card" style="margin-top:-6px;">
                         <div class="product-title">{p_name}</div>
                         <div style="color:#666; font-size:0.85rem; margin-top:2px;">Categoría: <b>{p_cat}</b></div>
                         <p style="color:#444; font-size:0.88rem; margin-top:6px; height:40px; overflow:hidden;">{p_desc}</p>
@@ -421,31 +462,6 @@ if mode == "🛍️ Catálogo Clientes":
                     """,
                     unsafe_allow_html=True
                 )
-                
-                # Efecto Rotatorio de Fotos (si tiene más de 1 imagen)
-                if len(p_imgs) > 1:
-                    c_prev, c_txt, c_next = st.columns([1, 2, 1])
-                    with c_prev:
-                        if st.button("◀", key=f"rot_prev_{p_id}_{idx}"):
-                            st.session_state[state_key] = (curr_idx - 1) % len(p_imgs)
-                            st.rerun()
-                    with c_txt:
-                        st.markdown(f"<div style='text-align:center; font-size:0.82rem; font-weight:bold; color:#D81B60; padding-top:4px;'>🖼️ Foto {curr_idx+1} de {len(p_imgs)}</div>", unsafe_allow_html=True)
-                    with c_next:
-                        if st.button("▶", key=f"rot_next_{p_id}_{idx}"):
-                            st.session_state[state_key] = (curr_idx + 1) % len(p_imgs)
-                            st.rerun()
-                    
-                    # Botones directos estilo selector rotatorio
-                    cols_dots = st.columns(len(p_imgs))
-                    for dot_i, d_col in enumerate(cols_dots):
-                        with d_col:
-                            dot_label = f"🟢" if dot_i == curr_idx else f"{dot_i+1}"
-                            if st.button(dot_label, key=f"rot_dot_{p_id}_{dot_i}"):
-                                st.session_state[state_key] = dot_i
-                                st.rerun()
-                elif len(p_imgs) == 1:
-                    st.caption("📷 Foto 1 de 1 disponible")
                 
                 # Indicador de stock
                 if p_stock > 5:
